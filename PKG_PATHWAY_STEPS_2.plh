@@ -1,0 +1,39 @@
+create or replace package pkg_pathway_steps_2 as
+function generate_column_check_sql( p_id IN VARCHAR2,
+                                        p_pathway_table_name IN VARCHAR2,
+                                        p_hubid IN HUB_SM_2.HUBID%TYPE,
+                                        p_pathway_id IN HUB_SM_2.PATHWAY_ID%TYPE,
+                                        p_pathway_step IN HUB_SM_2.PATHWAY_STEP%TYPE,
+                                        p_step_group IN HUB_SM_2.STEP_GROUP%TYPE,
+                                        p_agencyid IN HUB_SM_2.AGENCYID%TYPE,
+                                        p_plan_id IN HUB_SM_2.PLAN_ID%TYPE,
+                                        p_is_pct in HUB_SM_2.IS_PCT%TYPE) return varchar2;
+
+
+function pathway_step_processing(p_pathway_table in varchar2, p_id varchar2, p_status in out boolean) return HUB_SM_2.pathway_step%TYPE;
+
+procedure reset_all_pathway_steps;
+
+
+procedure calculate_in_queue;
+procedure process_queue_eod;
+procedure client_code_processing;
+procedure client_agency_processing;
+procedure job_processing;
+procedure test_pathway_step_processing(p_pathway_table in varchar2, p_id varchar2) ;
+
+procedure validate_hub_stepmaster ;
+
+function get_completed_date( p_pathway_id in HUB_STEP_CLOSE_2.PATHWAY_ID%type, p_id in VARCHAR2, p_hubid in HUB_STEP_CLOSE_2.HUBID%type, 
+                                   p_pathway_step IN HUB_STEP_CLOSE_2.PATHWAY_STEP%type,  p_step_group IN HUB_STEP_CLOSE_2.STEP_GROUP%type,
+                                   p_is_pct HUB_SM_2.IS_PCT%TYPE,
+                                   p_appt_dates_logic_flag HUB_SM_2.appt_dates_logic_flag%TYPE,
+                                   p_appt_type_token HUB_SM_2.appt_type_token%TYPE,
+                                   p_visit_id client_pathway_appt_dates.CLIENT_PATHWAY_VISITID%TYPE) 
+                                   RETURN DATE;
+
+procedure generate_executions( p_type VARCHAR2 default null, p_name VARCHAR2 default null, p_client_id varchar2 default null);
+procedure run_steps_executions;
+procedure generate_executions_from_errs;
+procedure reprocess_code_status_id ( p_code_status_id varchar2 );
+end pkg_pathway_steps_2;
